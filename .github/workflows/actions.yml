@@ -2,7 +2,7 @@ name: run main.py
 
 on:
   schedule:
-    - cron: '*/2 * * * *' # KATHE LEPTO
+    - cron: '0 0 * * *' # At 12 a.m. every day
 
 jobs:
   build:
