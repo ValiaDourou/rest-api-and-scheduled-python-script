@@ -700,7 +700,19 @@ def download_pdf():
 
  new_url = linklist[0]
 
- name=re.split('minos-',new_url)[1]
+ x=re.search('minos',new_url)
+ if x is not None:
+    name=re.split('minos-',new_url)[1]
+ else:
+    name=re.split('sitisis-',new_url)[1]
+    n=name.split('-')
+    if len(n)==4:
+        name=calendar.month_name[int(n[2])]
+        name=name+'-'+n[3]
+    else:
+        name=calendar.month_name[int(n[1])]
+        name=name+'-'+n[2]
+
  name=re.split('/',name)[0]
 
  # Requests URL and get response object
@@ -1457,8 +1469,20 @@ def download_pdf():
         linklist.append(link)
 
  new_url = linklist[0]
+ 
+ x=re.search('minos',new_url)
+ if x is not None:
+    name=re.split('minos-',new_url)[1]
+ else:
+    name=re.split('sitisis-',new_url)[1]
+    n=name.split('-')
+    if len(n)==4:
+        name=calendar.month_name[int(n[2])]
+        name=name+'-'+n[3]
+    else:
+        name=calendar.month_name[int(n[1])]
+        name=name+'-'+n[2]
 
- name=re.split('minos-',new_url)[1]
  name=re.split('/',name)[0]
 
  # Requests URL and get response object
