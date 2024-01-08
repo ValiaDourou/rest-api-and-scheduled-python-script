@@ -8,6 +8,7 @@ import calendar
 import logging
 import logging.handlers
 import os
+import datetime
 
 import requests
 
@@ -669,11 +670,19 @@ def extract_from_pdf(program,filename):
   b=b.strip()
  breakfast=brl[1:]
  print(len(dates),len(firstDishes),len(mainDishes1),len(mainDishes2),len(sideDishes),len(lunchDesserts),len(DfirstDishes),len(DmainDishes1),len(DmainDishes2),len(DsideDishes),len(dinnerDesserts),len(breakfast))
+ 
+ today = datetime.date.today()
 
+ n_dates=[]
+ for d in dates:
+    year = str(today.year)[-2:]
+    p=re.split('[0-9]+/[0-9]+/',d)
+    s=d.replace(p[1],year)
+    n_dates.append(s)
 
  #create json
  d = [ { 'day': x,'breakfast':l, 'lunch_first_dish': y, 'lunch_main_dish_1': z, 'lunch_main_dish_2':d,'lunch_side_dish':e,'lunch_dessert_1':'Φρούτο εποχής 2 επιλογές','lunch_dessert_2':f,'dinner_first_dish':g,'dinner_main_dish_1':h,'dinner_main_dish_2':i,'dinner_side_dish':j,'dinner_dessert_1':'Φρούτο εποχής 2 επιλογές','dinner_dessert_2':k } 
-    for x,l, y, z,d,e,f,g,h,i,j,k in zip(dates,breakfast,firstDishes,mainDishes1,mainDishes2,sideDishes,lunchDesserts,DfirstDishes,DmainDishes1,DmainDishes2,DsideDishes,dinnerDesserts) ]
+    for x,l, y, z,d,e,f,g,h,i,j,k in zip(n_dates,breakfast,firstDishes,mainDishes1,mainDishes2,sideDishes,lunchDesserts,DfirstDishes,DmainDishes1,DmainDishes2,DsideDishes,dinnerDesserts) ]
  filen = json.dumps(d, sort_keys=False, indent=4,ensure_ascii=False)
 
  month=re.split('/',dates[0])[1]
