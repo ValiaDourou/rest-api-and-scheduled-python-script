@@ -234,9 +234,10 @@ def extract_from_pdf(program,filename):
     else:
         if 'Συνοδευτικά' in lunch:
             dessert=re.split('Συνοδευτικά',lunch)[1]
+            dessert=re.split('2[\s]*[\n]*επιλογές[\s]*',dessert,1)[1]
+
         else:
-            dessert = re.split('Φρούτο', lunch)[1]
-        dessert=re.split('2[\s]*[\n]*επιλογές[\s]*',dessert,1)[1]
+            dessert = re.split('επιλογές', lunch)[7]
     
     #All the desserts from the pdf are now in a list
     x=re.search('-[\s]*Γλυκό',dessert)
@@ -257,10 +258,11 @@ def extract_from_pdf(program,filename):
      for h in range(len(dessertl)):
        if h==len(dessertl)-1:
         p=re.split('\n',dessertl[h])[0]
-        rd=len(p)-len(p.rstrip())-1
+        rd=(len(p)-len(p.rstrip())-1) / 2
     
     if len(dessertl)>0:
       dessertl[len(dessertl)-1]=dessertl[len(dessertl)-1].rstrip()
+    
 
     dessertl = [re.sub('\n', '!',s) for s in dessertl]
     if v==0:
@@ -443,9 +445,10 @@ def extract_from_pdf(program,filename):
     else:
         if 'Συνοδευτικά' in dinner:
             Ddessert=re.split('Συνοδευτικά',dinner)[1]
+            Ddessert=re.split('2[\s]*[\n]*επιλογές[\s]*',Ddessert,1)[1]
+
         else:
-            Ddessert = re.split('Φρούτο', dinner)[1]
-        Ddessert=re.split('2[\s]*[\n]*επιλογές[\s]*',Ddessert,1)[1]
+            Ddessert = re.split('επιλογές', dinner)[7]
     
     #All the desserts from the pdf are now in a list
     x=re.search('-[\s]*Γλυκό',Ddessert)
@@ -465,7 +468,7 @@ def extract_from_pdf(program,filename):
      for h in range(len(Ddessertl)):
        if h==len(Ddessertl)-1:
         p=re.split('\n',Ddessertl[h])[0]
-        Drd=len(p)-len(p.rstrip())-1
+        Drd=(len(p)-len(p.rstrip())-1) / 2
     
     if len(Ddessertl)>0:
       Ddessertl[len(Ddessertl)-1]=Ddessertl[len(Ddessertl)-1].rstrip()
@@ -513,7 +516,6 @@ def extract_from_pdf(program,filename):
       a=re.split('!',b)[1]
       y=len(a)-len(a.lstrip())
       lD.append(y) 
-
  dessertfL= [re.sub('[\s]*!', '',s) for s in dessertL]
  counter=0
  r=0
