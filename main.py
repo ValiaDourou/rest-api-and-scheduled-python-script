@@ -408,6 +408,12 @@ def extract_from_pdf(program,filename):
     if 'Μπουφές Σαλάτα' in dinner:
         Dside=re.split('Μπουφές Σαλάτα',dinner)[1]
         Dside=re.split('Επιδόρπιο|ΕΠΙΔΟΡΠΙ O',Dside)[0]
+    if 'Μπουφές Σαλάτα' in dinner and ('Επιδόρπιο' in dinner or 'ΕΠΙΔΟΡΠΙ O' in dinner):
+        Dside=re.split('Μπουφές Σαλάτα',dinner)[1]
+        Dside=re.split('Επιδόρπιο|ΕΠΙΔΟΡΠΙ O',Dside)[0]
+    if 'Μπουφές Σαλάτα' in dinner and ('Επιδόρπιο' not in dinner and 'ΕΠΙΔΟΡΠΙ O' not in dinner):
+        Dside=re.split('Μπουφές Σαλάτα',dinner)[1]
+        Dside=re.split('Φρούτο',Dside)[0]
     if 'Μπουφές Σαλάτα' not in dinner and 'Συνοδευτικά' in dinner:
         Dside=re.split('Συνοδευτικά',dinner)[1]
         Dside=re.split('Φρούτο',Dside)[0]
@@ -441,7 +447,10 @@ def extract_from_pdf(program,filename):
 
     #Get the dessert 
     if 'Μπουφές Σαλάτα' in dinner:
-        Ddessert=re.split('Επιδόρπιο|ΕΠΙΔΟΡΠΙ O',dinner)[1]
+        if 'Επιδόρπιο' in dinner or 'ΕΠΙΔΟΡΠΙ O' in dinner:
+            Ddessert=re.split('Επιδόρπιο|ΕΠΙΔΟΡΠΙ O',dinner)[1]
+        else:
+            Ddessert=re.split('2[\s]*[\n]*επιλογές[\s]*',dinner,1)[1]
     else:
         if 'Συνοδευτικά' in dinner:
             Ddessert=re.split('Συνοδευτικά',dinner)[1]
@@ -469,10 +478,13 @@ def extract_from_pdf(program,filename):
        if h==len(Ddessertl)-1:
         p=re.split('\n',Ddessertl[h])[0]
         Drd=(len(p)-len(p.rstrip())-1) / 2
-    
     if len(Ddessertl)>0:
       Ddessertl[len(Ddessertl)-1]=Ddessertl[len(Ddessertl)-1].rstrip()
-    Ddessertl = [re.sub('[\t\n ]+\*Ειδικό πιάτο : Aφορά ειδικές διατροφικές ανάγκες και προσδιορίζεται κάθε φορά μετά από καταγραφή της σχετικής ανάγκης.[\t]*[\n]*', '',s) for s in Ddessertl]
+    Ddessertl = [re.sub('[\t\n ]*\*Ειδικό πιάτο : Aφορά ειδικές διατροφικές ανάγκες και προσδιορίζεται κάθε φορά μετά από καταγραφή της σχετικής ανάγκης.[\t]*[\n]*', '',s) for s in Ddessertl]
+    Ddessertl = [re.sub('[\t\n ]*\*Ειδικό πιάτο : Aφορά ειδικές διατροφικές ανάγκες και προσδιορίζεται κάθε φορά μετά από καταγραφή της σχετικής ανάγκης[\t]*[\n]*', '',s) for s in Ddessertl]
+    if '\n' not in Ddessertl[0]:
+        Ddessertl[0] = '\n'+Ddessertl[0]
+
     Ddessertl = [re.sub('\n', '!',s) for s in Ddessertl]
 
     if v==0:
