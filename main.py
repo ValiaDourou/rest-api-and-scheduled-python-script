@@ -100,7 +100,7 @@ def extract_from_pdf(program,filename):
     firstDishes=firstDishes+firstDishesl
 
     #Get the first main dish
-    mainD1=re.split('Πιάτα [\n]*1',lunch)[1]
+    mainD1=re.split('Πιάτα[\s]*[\n]*1',lunch)[1]
     mainD1=re.split('2',mainD1)[0]
 
     #All the first main dishes from the pdf are now in a list
@@ -137,7 +137,7 @@ def extract_from_pdf(program,filename):
     mainDishes1=mainDishes1+mainDishes1l
 
     #Get the second main dish
-    mainD2=re.split('Πιάτα [\n]*1',lunch)[1]
+    mainD2=re.split('Πιάτα[\s]*[\n]*1',lunch)[1]
     mainD2=re.split('2',mainD2)[1]
     if 'Συνοδευτικά' in lunch:
         mainD2=re.split('Συνοδευτικά',mainD2)[0]
@@ -294,8 +294,12 @@ def extract_from_pdf(program,filename):
     DfirstDishes=DfirstDishes+DfirstDishesl
 
     #Get the first main dish
-    DmainD1=re.split('Πιάτα [\n]*1',dinner)[1]
+    DmainD1=re.split('Πιάτα[\s]*[\n]*1',dinner)[1]
     DmainD1=re.split('2',DmainD1)[0]
+    i=re.search('Συνοδευτικά',DmainD1)
+    if i!='None':
+        DmainD1=re.split('Συνοδευτικά',DmainD1)[0]
+
 
     #All the first main dishes from the pdf are now in a list
     x=re.search('Βολιώτικο',DmainD1)
@@ -333,7 +337,7 @@ def extract_from_pdf(program,filename):
     DmainDishes1=DmainDishes1+DmainDishes1l
 
     #Get the second main dish
-    DmainD2=re.split('Πιάτα [\n]*1',dinner)[1]
+    DmainD2=re.split('Πιάτα[\s]*[\n]*1',dinner)[1]
     DmainD2=re.split('2',DmainD2)[1]
     if 'Συνοδευτικά' in dinner:
         DmainD2=re.split('Συνοδευτικά',DmainD2)[0]
@@ -412,9 +416,9 @@ def extract_from_pdf(program,filename):
     Dsidel = [v for i, v in enumerate(Dside) if i % 2 == 0]
     DsideDishes=DsideDishes+Dsidel
 
-    #Get the dessert 
+    #Get the dessert
     if 'Μπουφές Σαλάτα' in dinner:
-        Ddessert=re.split('Επιδόρπιο|ΕΠΙΔΟΡΠΙ O',dinner)[1]
+        Ddessert=re.split('Επιδόρπιο|ΕΠΙΔΟΡΠΙ[\s]*O',dinner)[1]
     if 'Μπουφές Σαλάτα' not in dinner and 'Συνοδευτικά' in dinner:
         Ddessert=re.split('Συνοδευτικά',dinner)[1]
         Ddessert=re.split('2[\s]*[\n]*επιλογές[\s]*',Ddessert,1)[1]
@@ -669,6 +673,7 @@ def extract_from_pdf(program,filename):
  for b in brl:
   b=b.strip()
  breakfast=brl[1:]
+ print(DmainDishes1)
  print(len(dates),len(firstDishes),len(mainDishes1),len(mainDishes2),len(sideDishes),len(lunchDesserts),len(DfirstDishes),len(DmainDishes1),len(DmainDishes2),len(DsideDishes),len(dinnerDesserts),len(breakfast))
  
  today = datetime.date.today()
