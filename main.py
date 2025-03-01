@@ -482,7 +482,8 @@ def extract_from_pdf(program,filename):
       Ddessertl[len(Ddessertl)-1]=Ddessertl[len(Ddessertl)-1].rstrip()
     Ddessertl = [re.sub('[\t\n ]*\*Ειδικό πιάτο : Aφορά ειδικές διατροφικές ανάγκες και προσδιορίζεται κάθε φορά μετά από καταγραφή της σχετικής ανάγκης.[\t]*[\n]*', '',s) for s in Ddessertl]
     Ddessertl = [re.sub('[\t\n ]*\*Ειδικό πιάτο : Aφορά ειδικές διατροφικές ανάγκες και προσδιορίζεται κάθε φορά μετά από καταγραφή της σχετικής ανάγκης[\t]*[\n]*', '',s) for s in Ddessertl]
-    if '\n' not in Ddessertl[0]:
+    
+    if Ddessertl and '\n' not in Ddessertl[0]:
         Ddessertl[0] = '\n'+Ddessertl[0]
 
     Ddessertl = [re.sub('\n', '!',s) for s in Ddessertl]
@@ -516,7 +517,6 @@ def extract_from_pdf(program,filename):
 
  l=[]
  lD=[]
-
  for b in dessertL:
     if '!' in b:
       a=re.split('!',b)[1]
@@ -528,6 +528,7 @@ def extract_from_pdf(program,filename):
       a=re.split('!',b)[1]
       y=len(a)-len(a.lstrip())
       lD.append(y) 
+ 
  dessertfL= [re.sub('[\s]*!', '',s) for s in dessertL]
  counter=0
  r=0
@@ -537,6 +538,7 @@ def extract_from_pdf(program,filename):
  if fc<7:
   for i in range(len(dessertL)):
     c=re.search('!',dessertL[i])
+
     if c!=None:
         if counter<=7 and counter>0 and r>0:
             cd=7-counter
@@ -593,7 +595,7 @@ def extract_from_pdf(program,filename):
          lunchDesserts.append('-')
          counter=counter+1
      if counter==0 and r>0:
-      if lD[r]>0:
+      if l[r]>0:
        for j in range(l[r]):
         lunchDesserts.append('-')
         counter=counter+1
@@ -624,6 +626,7 @@ def extract_from_pdf(program,filename):
  if fcd<7:
   for i in range(len(DdessertL)):
     c=re.search('!',DdessertL[i])
+
     if c!=None:
         if counterD<=7 and counterD>0 and rD>0:
             cd=7-counterD
@@ -638,15 +641,12 @@ def extract_from_pdf(program,filename):
             counterD=0
             rD=rD+1
     if counterD==0 and rD>0:
-     if lD[rD]>0:
-      for j in range(lD[rD]):
+     for j in range(lD[rD]):
         dinnerDesserts.append('-')
         counterD=counterD+1
      zD=1
      counterD=counterD+1
-
-
-    if counterD==0 and i==0:
+    if counterD==0 and i==0 and DdessertL[i+1] and i < len(DdessertL) and re.search('!',DdessertL[i+1]) != None:
      counterD=counterD+1+sd
             
     diff=len(DdessertfL[i])-len(DdessertfL[i].lstrip())
@@ -661,7 +661,7 @@ def extract_from_pdf(program,filename):
     if counterD>=7 and rD>0:
         counterD=0
         rD=rD+1
-    if counterD>=fcd and rD==0:
+    if counterD>=fcd and rD==0 and i < len(DdessertL) and re.search('!',DdessertL[i+1]) != None:
         counterD=0
         rD=rD+1
  if fcd==7:
@@ -674,14 +674,14 @@ def extract_from_pdf(program,filename):
                 dinnerDesserts.append('-')
             counterD=0
             rD=rD+1
-
      if counterD!=0:
       diff=len(DdessertfL[i])-len(DdessertfL[i].lstrip())
       for k in range(diff-1):
          dinnerDesserts.append('-')
          counterD=counterD+1
      if counterD==0 and rD>0:
-      for j in range(lD[rD]):
+      if lD[rD]>0:
+       for j in range(lD[rD]):
         dinnerDesserts.append('-')
         counterD=counterD+1
      if counterD==0 and rD==0:
