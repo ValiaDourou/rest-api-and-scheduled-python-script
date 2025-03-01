@@ -100,7 +100,7 @@ def extract_from_pdf(program,filename):
     firstDishes=firstDishes+firstDishesl
 
     #Get the first main dish
-    mainD1=re.split('Πιάτα[\s]*[\n]*1',lunch)[1]
+    mainD1=re.split('Πιάτα [\n]*1',lunch)[1]
     mainD1=re.split('2',mainD1)[0]
 
     #All the first main dishes from the pdf are now in a list
@@ -137,12 +137,23 @@ def extract_from_pdf(program,filename):
     mainDishes1=mainDishes1+mainDishes1l
 
     #Get the second main dish
-    mainD2=re.split('Πιάτα[\s]*[\n]*1',lunch)[1]
+    mainD2=re.split('Πιάτα [\n]*1',lunch)[1]
     mainD2=re.split('2',mainD2)[1]
-    if 'Συνοδευτικά' in lunch:
-        mainD2=re.split('Συνοδευτικά',mainD2)[0]
-    else:
+    if 'Μπουφές Σαλάτα' in lunch:
         mainD2=re.split('Μπουφές Σαλάτα',mainD2)[0]
+    else:
+        if 'Συνοδευτικά' in lunch:
+            mainD2=re.split('Συνοδευτικά',mainD2)[0]
+        elif 'Μαρούλι' in lunch:
+            mainD2=re.split('Μαρούλι',mainD2)[0]
+        elif 'Λάχανο' in lunch:
+            mainD2=re.split('Λάχανο',mainD2)[0]
+        elif 'Μπρόκολο' in lunch:
+            mainD2=re.split('Μπρόκολο',mainD2)[0]
+        elif 'Κουνουπίδι' in lunch:
+            mainD2=re.split('Κουνουπίδι',mainD2)[0]
+        elif 'Ταραμοσαλάτα' in lunch:
+            mainD2=re.split('Ταραμοσαλάτα',mainD2)[0]
     
     #All the second main dishes from the pdf are now in a list
     x=re.search('Βολιώτικο',mainD2)
@@ -181,8 +192,19 @@ def extract_from_pdf(program,filename):
         side=re.split('Μπουφές Σαλάτα',lunch)[1]
         side=re.split('Επιδόρπιο',side)[0]
     else:
-        side=re.split('Συνοδευτικά',lunch)[1]
-        side=re.split('Φρούτο',side)[0]
+        if 'Συνοδευτικά' in lunch:
+            side=re.split('Συνοδευτικά',lunch)[1]
+        elif 'Μαρούλι' in lunch:
+            side='Μαρούλι' + re.split('Μαρούλι',lunch,1)[1]
+        elif 'Λάχανο' in lunch:
+            side='Λάχανο' + re.split('Λάχανο',lunch,1)[1]
+        elif 'Μπρόκολο' in lunch:
+            side='Μπρόκολο' + re.split('Μπρόκολο',lunch,1)[1]
+        elif 'Κουνουπίδι' in lunch:
+            side='Κουνουπίδι' + re.split('Κουνουπίδι',lunch,1)[1]
+        elif 'Ταραμοσαλάτα' in lunch:
+            side='Ταραμοσαλάτα' + re.split('Ταραμοσαλάτα',lunch,1)[1]
+        side=re.split('Φρούτο',side, 1)[0]
 
     #All the side dishes from the pdf are now in a list
     x=re.search('Λάχανο',side)
@@ -210,8 +232,12 @@ def extract_from_pdf(program,filename):
     if 'Μπουφές Σαλάτα' in lunch:
         dessert=re.split('Επιδόρπιο',lunch)[1]
     else:
-        dessert=re.split('Συνοδευτικά',lunch)[1]
-        dessert=re.split('2[\s]*[\n]*επιλογές[\s]*',dessert,1)[1]
+        if 'Συνοδευτικά' in lunch:
+            dessert=re.split('Συνοδευτικά',lunch)[1]
+            dessert=re.split('2[\s]*[\n]*επιλογές[\s]*',dessert,1)[1]
+
+        else:
+            dessert = re.split('επιλογές', lunch)[7]
     
     #All the desserts from the pdf are now in a list
     x=re.search('-[\s]*Γλυκό',dessert)
@@ -232,10 +258,11 @@ def extract_from_pdf(program,filename):
      for h in range(len(dessertl)):
        if h==len(dessertl)-1:
         p=re.split('\n',dessertl[h])[0]
-        rd=len(p)-len(p.rstrip())-1
+        rd=(len(p)-len(p.rstrip())-1) / 2
     
     if len(dessertl)>0:
       dessertl[len(dessertl)-1]=dessertl[len(dessertl)-1].rstrip()
+    
 
     dessertl = [re.sub('\n', '!',s) for s in dessertl]
     if v==0:
@@ -294,12 +321,8 @@ def extract_from_pdf(program,filename):
     DfirstDishes=DfirstDishes+DfirstDishesl
 
     #Get the first main dish
-    DmainD1=re.split('Πιάτα[\s]*[\n]*1',dinner)[1]
+    DmainD1=re.split('Πιάτα [\n]*1',dinner)[1]
     DmainD1=re.split('2',DmainD1)[0]
-    i=re.search('Συνοδευτικά',DmainD1)
-    if i!='None':
-        DmainD1=re.split('Συνοδευτικά',DmainD1)[0]
-
 
     #All the first main dishes from the pdf are now in a list
     x=re.search('Βολιώτικο',DmainD1)
@@ -337,7 +360,7 @@ def extract_from_pdf(program,filename):
     DmainDishes1=DmainDishes1+DmainDishes1l
 
     #Get the second main dish
-    DmainD2=re.split('Πιάτα[\s]*[\n]*1',dinner)[1]
+    DmainD2=re.split('Πιάτα [\n]*1',dinner)[1]
     DmainD2=re.split('2',DmainD2)[1]
     if 'Συνοδευτικά' in dinner:
         DmainD2=re.split('Συνοδευτικά',DmainD2)[0]
@@ -385,6 +408,12 @@ def extract_from_pdf(program,filename):
     if 'Μπουφές Σαλάτα' in dinner:
         Dside=re.split('Μπουφές Σαλάτα',dinner)[1]
         Dside=re.split('Επιδόρπιο|ΕΠΙΔΟΡΠΙ O',Dside)[0]
+    if 'Μπουφές Σαλάτα' in dinner and ('Επιδόρπιο' in dinner or 'ΕΠΙΔΟΡΠΙ O' in dinner):
+        Dside=re.split('Μπουφές Σαλάτα',dinner)[1]
+        Dside=re.split('Επιδόρπιο|ΕΠΙΔΟΡΠΙ O',Dside)[0]
+    if 'Μπουφές Σαλάτα' in dinner and ('Επιδόρπιο' not in dinner and 'ΕΠΙΔΟΡΠΙ O' not in dinner):
+        Dside=re.split('Μπουφές Σαλάτα',dinner)[1]
+        Dside=re.split('Φρούτο',Dside)[0]
     if 'Μπουφές Σαλάτα' not in dinner and 'Συνοδευτικά' in dinner:
         Dside=re.split('Συνοδευτικά',dinner)[1]
         Dside=re.split('Φρούτο',Dside)[0]
@@ -416,15 +445,20 @@ def extract_from_pdf(program,filename):
     Dsidel = [v for i, v in enumerate(Dside) if i % 2 == 0]
     DsideDishes=DsideDishes+Dsidel
 
-    #Get the dessert
+    #Get the dessert 
     if 'Μπουφές Σαλάτα' in dinner:
-        Ddessert=re.split('Επιδόρπιο|ΕΠΙΔΟΡΠΙ[\s]*O',dinner)[1]
-    if 'Μπουφές Σαλάτα' not in dinner and 'Συνοδευτικά' in dinner:
-        Ddessert=re.split('Συνοδευτικά',dinner)[1]
-        Ddessert=re.split('2[\s]*[\n]*επιλογές[\s]*',Ddessert,1)[1]
-    if 'Μπουφές Σαλάτα' not in dinner and 'Συνοδευτικά' not in dinner:
-        Ddessert=re.split('Επιδόρπιο',dinner)[1]  
+        if 'Επιδόρπιο' in dinner or 'ΕΠΙΔΟΡΠΙ O' in dinner:
+            Ddessert=re.split('Επιδόρπιο|ΕΠΙΔΟΡΠΙ O',dinner)[1]
+        else:
+            Ddessert=re.split('2[\s]*[\n]*επιλογές[\s]*',dinner,1)[1]
+    else:
+        if 'Συνοδευτικά' in dinner:
+            Ddessert=re.split('Συνοδευτικά',dinner)[1]
+            Ddessert=re.split('2[\s]*[\n]*επιλογές[\s]*',Ddessert,1)[1]
 
+        else:
+            Ddessert = re.split('επιλογές', dinner)[7]
+    
     #All the desserts from the pdf are now in a list
     x=re.search('-[\s]*Γλυκό',Ddessert)
 
@@ -438,18 +472,21 @@ def extract_from_pdf(program,filename):
         Ddessert[i]=Ddessert[i]+Ddessert[i+1]        
 
     Ddessertl = [v for i, v in enumerate(Ddessert) if i % 2 == 0]
-
     Drd=0
     if v==0:
      for h in range(len(Ddessertl)):
        if h==len(Ddessertl)-1:
         p=re.split('\n',Ddessertl[h])[0]
-        Drd=len(p)-len(p.rstrip())-1
-    
+        Drd=(len(p)-len(p.rstrip())-1) / 2
     if len(Ddessertl)>0:
       Ddessertl[len(Ddessertl)-1]=Ddessertl[len(Ddessertl)-1].rstrip()
+    Ddessertl = [re.sub('[\t\n ]*\*Ειδικό πιάτο : Aφορά ειδικές διατροφικές ανάγκες και προσδιορίζεται κάθε φορά μετά από καταγραφή της σχετικής ανάγκης.[\t]*[\n]*', '',s) for s in Ddessertl]
+    Ddessertl = [re.sub('[\t\n ]*\*Ειδικό πιάτο : Aφορά ειδικές διατροφικές ανάγκες και προσδιορίζεται κάθε φορά μετά από καταγραφή της σχετικής ανάγκης[\t]*[\n]*', '',s) for s in Ddessertl]
+    if '\n' not in Ddessertl[0]:
+        Ddessertl[0] = '\n'+Ddessertl[0]
 
     Ddessertl = [re.sub('\n', '!',s) for s in Ddessertl]
+
     if v==0:
      st=Ddessertl
      cnt=len(dates)-len(st)
@@ -491,7 +528,6 @@ def extract_from_pdf(program,filename):
       a=re.split('!',b)[1]
       y=len(a)-len(a.lstrip())
       lD.append(y) 
-
  dessertfL= [re.sub('[\s]*!', '',s) for s in dessertL]
  counter=0
  r=0
@@ -673,7 +709,6 @@ def extract_from_pdf(program,filename):
  for b in brl:
   b=b.strip()
  breakfast=brl[1:]
- print(DmainDishes1)
  print(len(dates),len(firstDishes),len(mainDishes1),len(mainDishes2),len(sideDishes),len(lunchDesserts),len(DfirstDishes),len(DmainDishes1),len(DmainDishes2),len(DsideDishes),len(dinnerDesserts),len(breakfast))
  
  today = datetime.date.today()
