@@ -213,8 +213,8 @@ def extract_from_pdf(program,filename):
 
     if x!='None':
         side = re.sub("Λάχανο", "λάχανο", side)
-    if y!='None':
-        side = re.sub(',[\s]*Μαρούλι',',μαρούλι', side)
+    # if y!='None':
+    #     side = re.sub(',[\s]*Μαρούλι',',μαρούλι', side)
     if w!='None':
         side = re.sub('Φλωρίνης','φλωρίνης', side)
 
@@ -709,6 +709,9 @@ def extract_from_pdf(program,filename):
  for b in brl:
   b=b.strip()
  breakfast=brl[1:]
+ if len(dinnerDesserts) == 32:
+    dinnerDesserts = dinnerDesserts[:4] + dinnerDesserts[5:]
+
  print(len(dates),len(firstDishes),len(mainDishes1),len(mainDishes2),len(sideDishes),len(lunchDesserts),len(DfirstDishes),len(DmainDishes1),len(DmainDishes2),len(DsideDishes),len(dinnerDesserts),len(breakfast))
  
  today = datetime.date.today()
@@ -764,6 +767,10 @@ def download_pdf():
  x=re.search('minos',new_url)
  if x is not None:
     name=re.split('minos-',new_url)[1]
+ elif 'maios' in new_url:
+    year=re.split('sitisis-[A-Za-z-]*',new_url)[1]
+    year=year.split('-')[0]
+    name = 'May' + '-' + year
  else:
     name=re.split('sitisis-[A-Za-z-]*',new_url)[1]
     n=name.split('-')
