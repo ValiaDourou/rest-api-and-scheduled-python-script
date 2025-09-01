@@ -719,7 +719,7 @@ def extract_from_pdf(program,filename):
  n_dates=[]
  for d in dates:
     year = str(today.year)[-2:]
-    p=re.split('[0-9]+/[0-9]+/',d)
+    p=re.split('[0-9]+\s*/\s*[0-9]+\s*/',d)
     s=d.replace(p[1],year)
     n_dates.append(s)
 
