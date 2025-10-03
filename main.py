@@ -771,9 +771,14 @@ def download_pdf():
     year=re.split('sitisis-[A-Za-z-]*',new_url)[1]
     year=year.split('-')[0]
     name = 'May' + '-' + year
+ elif 'oktovrios' in new_url:
+    year=re.split('sitisis-[A-Za-z-]*',new_url)[1]
+    year=year.split('-')[0]
+    name = 'October' + '-' + year
  else:
     name=re.split('sitisis-[A-Za-z-]*',new_url)[1]
     n=name.split('-')
+
     if len(n)==4:
         name=calendar.month_name[int(n[2])]
         name=name+'-'+n[3]
