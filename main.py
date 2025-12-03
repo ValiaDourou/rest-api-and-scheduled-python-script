@@ -34,7 +34,8 @@ def extract_from_pdf(program,filename):
  t=text.strip()
 
  t=t.split('ΠΡΟΣΦΕΡΟΜΕΝΟ')
- finalt=t[1:len(t)]
+ # Filter out ΝΗΣΤΙΣΙΜΕΣ ΕΠΙΛΟΓΕΣ (fasting options) sections - only keep ΒΕΛΤΙΩΜΕΝΟ ΕΔΕΣΜΑΤΟΛΟΓΙΟ sections
+ finalt=[section for section in t[1:len(t)] if 'ΝΗΣΤΙΣΙΜΕΣ' not in section and 'ΒΕΛΤΙΩΜΕΝΟ' in section]
 
  lunch=[]
  dinner=[]
@@ -60,12 +61,12 @@ def extract_from_pdf(program,filename):
  sd=0
  cntd=0
 
- for i in t[1:]:
+ for i in finalt:
     week=i.split('ΔΕΙΠΝΟ')
     lunch=week[0]
     dinner=week[1]
 
-    if i==t[-1]:
+    if i==finalt[-1]:
         breakfast=re.split('ΠΡΩΙΝΟ|Πρωινό',dinner)[1]
         dinner=re.split('ΠΡΩΙΝΟ|Πρωινό',dinner)[0]
         
@@ -776,15 +777,23 @@ def download_pdf():
     year=year.split('-')[0]
     name = 'October' + '-' + year
  else:
-    name=re.split('sitisis-[A-Za-z-]*',new_url)[1]
-    n=name.split('-')
-
-    if len(n)==4:
-        name=calendar.month_name[int(n[2])]
-        name=name+'-'+n[3]
+    # Try to match date range format like "programma-sitisis-1-23-12-2025"
+    date_range_match = re.search(r'sitisis-(\d+)-(\d+)-(\d+)-(\d+)', new_url)
+    if date_range_match:
+        # Format: sitisis-{start_day}-{end_day}-{month}-{year}
+        month_num = int(date_range_match.group(3))
+        year = date_range_match.group(4)
+        name = calendar.month_name[month_num] + '-' + year
     else:
-        name=calendar.month_name[int(n[1])]
-        name=name+'-'+n[2]
+        name=re.split('sitisis-[A-Za-z-]*',new_url)[1]
+        n=name.split('-')
+
+        if len(n)==4:
+            name=calendar.month_name[int(n[2])]
+            name=name+'-'+n[3]
+        else:
+            name=calendar.month_name[int(n[1])]
+            name=name+'-'+n[2]
 
  name=re.split('/',name)[0]
 
