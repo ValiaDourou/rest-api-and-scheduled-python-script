@@ -81,7 +81,7 @@ def extract_from_pdf(program,filename):
     dates=dates+datesl
 
     #Get the first dish
-    firstD=re.split('Πρώτο[\s]*[\n]*[\s]*Πιάτο|Πρώτο[\s]*[\n]*[\s]*πιάτο',lunch)[1]
+    firstD=re.split('[Π]?ρώτο[\s]*[\n]*[\s]*Πιάτο|[Π]?ρώτο[\s]*[\n]*[\s]*πιάτο',lunch)[1]
     firstD=re.split('Κυρίως',firstD)[0]
 
     #All the first dishes from the pdf are now in a list
@@ -296,7 +296,7 @@ def extract_from_pdf(program,filename):
 
     #Get dinner info
     #Get the first dish
-    DfirstD=re.split('Πρώτο[\s]*[\n]*[\s]*Πιάτο|Πρώτο[\s]*[\n]*[\s]*πιάτο',dinner)[1]
+    DfirstD=re.split('[Π]?ρώτο[\s]*[\n]*[\s]*Πιάτο|[Π]?ρώτο[\s]*[\n]*[\s]*πιάτο',dinner)[1]
     DfirstD=re.split('Κυρίως',DfirstD)[0]
 
     w=re.search('Σεφ',DfirstD)
@@ -765,35 +765,67 @@ def download_pdf():
 
  new_url = linklist[0]
  
+ # Greek month name mapping
+ greek_months = {
+     'ianouariou': 'January',
+     'fevrouariou': 'February', 
+     'martiou': 'March',
+     'apriliou': 'April',
+     'maios': 'May',
+     'maiou': 'May',
+     'iouniou': 'June',
+     'iouliou': 'July',
+     'avgoustou': 'August',
+     'septemvriou': 'September',
+     'oktovriou': 'October',
+     'noemvriou': 'November',
+     'dekemvriou': 'December'
+ }
+ 
  x=re.search('minos',new_url)
  if x is not None:
     name=re.split('minos-',new_url)[1]
- elif 'maios' in new_url:
-    year=re.split('sitisis-[A-Za-z-]*',new_url)[1]
-    year=year.split('-')[0]
-    name = 'May' + '-' + year
- elif 'oktovrios' in new_url:
-    year=re.split('sitisis-[A-Za-z-]*',new_url)[1]
-    year=year.split('-')[0]
-    name = 'October' + '-' + year
  else:
-    # Try to match date range format like "programma-sitisis-1-23-12-2025"
-    date_range_match = re.search(r'sitisis-(\d+)-(\d+)-(\d+)-(\d+)', new_url)
-    if date_range_match:
-        # Format: sitisis-{start_day}-{end_day}-{month}-{year}
-        month_num = int(date_range_match.group(3))
-        year = date_range_match.group(4)
-        name = calendar.month_name[month_num] + '-' + year
-    else:
-        name=re.split('sitisis-[A-Za-z-]*',new_url)[1]
-        n=name.split('-')
-
-        if len(n)==4:
-            name=calendar.month_name[int(n[2])]
-            name=name+'-'+n[3]
+    # Try to find Greek month name in URL
+    greek_month_found = None
+    for greek_name, english_name in greek_months.items():
+        if greek_name in new_url:
+            greek_month_found = (greek_name, english_name)
+            break
+    
+    if greek_month_found:
+        greek_name, english_name = greek_month_found
+        # Extract year from URL (usually at the end like "fevrouariou-2026/")
+        year_match = re.search(greek_name + r'-(\d{4})', new_url)
+        if year_match:
+            year = year_match.group(1)
+            name = english_name + '-' + year
         else:
-            name=calendar.month_name[int(n[1])]
-            name=name+'-'+n[2]
+            # Fallback: try to get year from end of URL
+            year_match = re.search(r'(\d{4})', new_url)
+            year = year_match.group(1) if year_match else '2026'
+            name = english_name + '-' + year
+    else:
+        # Try to match date range format like "programma-sitisis-1-23-12-2025"
+        date_range_match = re.search(r'sitisis-(\d+)-(\d+)-(\d+)-(\d+)', new_url)
+        if date_range_match:
+            # Format: sitisis-{start_day}-{end_day}-{month}-{year}
+            month_num = int(date_range_match.group(3))
+            year = date_range_match.group(4)
+            name = calendar.month_name[month_num] + '-' + year
+        else:
+            name=re.split('sitisis-[A-Za-z-]*',new_url)[1]
+            n=name.split('-')
+
+            if len(n)==4:
+                name=calendar.month_name[int(n[2])]
+                name=name+'-'+n[3]
+            elif len(n) >= 3:
+                name=calendar.month_name[int(n[1])]
+                name=name+'-'+n[2]
+            else:
+                # Fallback for unexpected formats
+                name='Unknown-2026'
 
  name=re.split('/',name)[0]
 
