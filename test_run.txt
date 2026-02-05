@@ -1,0 +1,163 @@
+﻿python : C:\Users\vpddk\Desktop\Me\Github\rest-
+api-and-scheduled-python-script\main.py:84: 
+SyntaxWarning: invalid escape sequence '\s'
+At line:1 char:1
++ python main.py 2>&1 | Out-File -FilePath 
+test_run.txt -Encoding utf8; ...
++ ~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C 
+   :\Users\vpddk\...e sequence '\s':String) [  
+  ], RemoteException
+    + FullyQualifiedErrorId : NativeCommandErr 
+   or
+ 
+  firstD=re.split('[\u03a0]?\u03c1\u03ce\u03c4\
+u03bf[\s]*[\n]*[\s]*\u03a0\u03b9\u03ac\u03c4\u0
+3bf|[\u03a0]?\u03c1\u03ce\u03c4\u03bf[\s]*[\n]*
+[\s]*\u03c0\u03b9\u03ac\u03c4\u03bf',lunch)[1]
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:212: 
+SyntaxWarning: invalid escape sequence '\s'
+  y=re.search(',[\s]*\u039c\u03b1\u03c1\u03bf\u
+03cd\u03bb\u03b9',side)
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:238: 
+SyntaxWarning: invalid escape sequence '\s'
+  dessert=re.split('2[\s]*[\n]*\u03b5\u03c0\u03
+b9\u03bb\u03bf\u03b3\u03ad\u03c2[\s]*',dessert,
+1)[1]
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:244: 
+SyntaxWarning: invalid escape sequence '\s'
+  x=re.search('-[\s]*\u0393\u03bb\u03c5\u03ba\u
+03cc',dessert)
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:247: 
+SyntaxWarning: invalid escape sequence '\s'
+  dessert = 
+re.sub("-[\s]*\u0393\u03bb\u03c5\u03ba\u03cc", 
+"-\u03b3\u03bb\u03c5\u03ba\u03cc", dessert)
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:248: 
+SyntaxWarning: invalid escape sequence '\s'
+  dessert=re.split('([\s]*[\u0391-\u0394\u0396-
+\u03a5\u03a7-\u03a9])',dessert)
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:299: 
+SyntaxWarning: invalid escape sequence '\s'
+  DfirstD=re.split('[\u03a0]?\u03c1\u03ce\u03c4
+\u03bf[\s]*[\n]*[\s]*\u03a0\u03b9\u03ac\u03c4\u
+03bf|[\u03a0]?\u03c1\u03ce\u03c4\u03bf[\s]*[\n]
+*[\s]*\u03c0\u03b9\u03ac\u03c4\u03bf',dinner)[1
+]
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:430: 
+SyntaxWarning: invalid escape sequence '\s'
+  y=re.search(',[\s]*\u039c\u03b1\u03c1\u03bf\u
+03cd\u03bb\u03b9',Dside)
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:435: 
+SyntaxWarning: invalid escape sequence '\s'
+  Dside = re.sub(',[\s]*\u039c\u03b1\u03c1\u03b
+f\u03cd\u03bb\u03b9',',\u03bc\u03b1\u03c1\u03bf
+\u03cd\u03bb\u03b9', Dside)
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:454: 
+SyntaxWarning: invalid escape sequence '\s'
+  Ddessert=re.split('2[\s]*[\n]*\u03b5\u03c0\u0
+3b9\u03bb\u03bf\u03b3\u03ad\u03c2[\s]*',dinner,
+1)[1]
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:458: 
+SyntaxWarning: invalid escape sequence '\s'
+  Ddessert=re.split('2[\s]*[\n]*\u03b5\u03c0\u0
+3b9\u03bb\u03bf\u03b3\u03ad\u03c2[\s]*',Ddesser
+t,1)[1]
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:464: 
+SyntaxWarning: invalid escape sequence '\s'
+  x=re.search('-[\s]*\u0393\u03bb\u03c5\u03ba\u
+03cc',Ddessert)
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:467: 
+SyntaxWarning: invalid escape sequence '\s'
+  Ddessert = 
+re.sub("-[\s]*\u0393\u03bb\u03c5\u03ba\u03cc", 
+"-\u03b3\u03bb\u03c5\u03ba\u03cc", Ddessert)
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:468: 
+SyntaxWarning: invalid escape sequence '\s'
+  Ddessert=re.split('([\s]*[\u0391-\u0394\u0396
+-\u03a5\u03a7-\u03a9])',Ddessert)
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:484: 
+SyntaxWarning: invalid escape sequence '\*'
+  Ddessertl = [re.sub('[\t\n 
+]*\*\u0395\u03b9\u03b4\u03b9\u03ba\u03cc 
+\u03c0\u03b9\u03ac\u03c4\u03bf : 
+A\u03c6\u03bf\u03c1\u03ac 
+\u03b5\u03b9\u03b4\u03b9\u03ba\u03ad\u03c2 \u03
+b4\u03b9\u03b1\u03c4\u03c1\u03bf\u03c6\u03b9\u0
+3ba\u03ad\u03c2 
+\u03b1\u03bd\u03ac\u03b3\u03ba\u03b5\u03c2 
+\u03ba\u03b1\u03b9 \u03c0\u03c1\u03bf\u03c3\u03
+b4\u03b9\u03bf\u03c1\u03af\u03b6\u03b5\u03c4\u0
+3b1\u03b9 \u03ba\u03ac\u03b8\u03b5 
+\u03c6\u03bf\u03c1\u03ac 
+\u03bc\u03b5\u03c4\u03ac \u03b1\u03c0\u03cc \u0
+3ba\u03b1\u03c4\u03b1\u03b3\u03c1\u03b1\u03c6\u
+03ae \u03c4\u03b7\u03c2 \u03c3\u03c7\u03b5\u03c
+4\u03b9\u03ba\u03ae\u03c2 \u03b1\u03bd\u03ac\u0
+3b3\u03ba\u03b7\u03c2.[\t]*[\n]*', '',s) for s 
+in Ddessertl]
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:485: 
+SyntaxWarning: invalid escape sequence '\*'
+  Ddessertl = [re.sub('[\t\n 
+]*\*\u0395\u03b9\u03b4\u03b9\u03ba\u03cc 
+\u03c0\u03b9\u03ac\u03c4\u03bf : 
+A\u03c6\u03bf\u03c1\u03ac 
+\u03b5\u03b9\u03b4\u03b9\u03ba\u03ad\u03c2 \u03
+b4\u03b9\u03b1\u03c4\u03c1\u03bf\u03c6\u03b9\u0
+3ba\u03ad\u03c2 
+\u03b1\u03bd\u03ac\u03b3\u03ba\u03b5\u03c2 
+\u03ba\u03b1\u03b9 \u03c0\u03c1\u03bf\u03c3\u03
+b4\u03b9\u03bf\u03c1\u03af\u03b6\u03b5\u03c4\u0
+3b1\u03b9 \u03ba\u03ac\u03b8\u03b5 
+\u03c6\u03bf\u03c1\u03ac 
+\u03bc\u03b5\u03c4\u03ac \u03b1\u03c0\u03cc \u0
+3ba\u03b1\u03c4\u03b1\u03b3\u03c1\u03b1\u03c6\u
+03ae \u03c4\u03b7\u03c2 \u03c3\u03c7\u03b5\u03c
+4\u03b9\u03ba\u03ae\u03c2 \u03b1\u03bd\u03ac\u0
+3b3\u03ba\u03b7\u03c2[\t]*[\n]*', '',s) for s 
+in Ddessertl]
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:533: 
+SyntaxWarning: invalid escape sequence '\s'
+  dessertfL= [re.sub('[\s]*!', '',s) for s in 
+dessertL]
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:621: 
+SyntaxWarning: invalid escape sequence '\s'
+  DdessertfL= [re.sub('[\s]*!', '',s) for s in 
+DdessertL]
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:706: 
+SyntaxWarning: invalid escape sequence '\s'
+  
+brl=re.split('1\u03b7[\s]*[\n]*',breakfast)[1]
+C:\Users\vpddk\Desktop\Me\Github\rest-api-and-s
+cheduled-python-script\main.py:723: 
+SyntaxWarning: invalid escape sequence '\s'
+  p=re.split('[0-9]+\s*/\s*[0-9]+\s*/',d)
+Traceback (most recent call last):
+  File "C:\Users\vpddk\Desktop\Me\Github\rest-a
+pi-and-scheduled-python-script\main.py", line 
+852, in <module>
+    download_pdf()
+  File "C:\Users\vpddk\Desktop\Me\Github\rest-a
+pi-and-scheduled-python-script\main.py", line 
+795, in download_pdf
+    name=calendar.month_name[int(n[1])]
+                                 ~^^^
+IndexError: list index out of range

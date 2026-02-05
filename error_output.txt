@@ -1,0 +1,36 @@
+﻿python : <string>:84: SyntaxWarning: invalid escape sequence '\s'
+At line:1 char:1
++ python run_test.py 2>&1 | Out-File -FilePath error_output.txt -Encodi ...
++ ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (<    string>:84: Sy...e sequence '\s':String) [    ], RemoteException
+    + FullyQualifiedErrorId : NativeCommandErr    or
+ 
+<string>:212: SyntaxWarning: invalid escape sequence '\s'
+<string>:238: SyntaxWarning: invalid escape sequence '\s'
+<string>:244: SyntaxWarning: invalid escape sequence '\s'
+<string>:247: SyntaxWarning: invalid escape sequence '\s'
+<string>:248: SyntaxWarning: invalid escape sequence '\s'
+<string>:299: SyntaxWarning: invalid escape sequence '\s'
+<string>:430: SyntaxWarning: invalid escape sequence '\s'
+<string>:435: SyntaxWarning: invalid escape sequence '\s'
+<string>:454: SyntaxWarning: invalid escape sequence '\s'
+<string>:458: SyntaxWarning: invalid escape sequence '\s'
+<string>:464: SyntaxWarning: invalid escape sequence '\s'
+<string>:467: SyntaxWarning: invalid escape sequence '\s'
+<string>:468: SyntaxWarning: invalid escape sequence '\s'
+<string>:484: SyntaxWarning: invalid escape sequence '\*'
+<string>:485: SyntaxWarning: invalid escape sequence '\*'
+<string>:533: SyntaxWarning: invalid escape sequence '\s'
+<string>:621: SyntaxWarning: invalid escape sequence '\s'
+<string>:706: SyntaxWarning: invalid escape sequence '\s'
+<string>:723: SyntaxWarning: invalid escape sequence '\s'
+Traceback (most recent call last):
+  File "C:\Users\vpddk\Desktop\Me\Github\rest-api-and-scheduled-python-script\run_test.py", line 8, in <module>
+    exec(open('main.py', encoding='utf-8').read())
+  File "<string>", line 872, in <module>
+  File "<string>", line 846, in download_pdf
+  File "<string>", line 84, in extract_from_pdf
+IndexError: list index out of range
+https://www.upatras.gr/wp-content/uploads/2026/01/╬á╬í╬ƒ╬ô╬í╬æ╬£╬£╬æ-╬ú╬Ö╬ñ╬Ö╬ú╬ù╬ú_╬ª╬ò╬Æ╬í╬ƒ╬Ñ╬æ╬í╬Ö╬ƒ╬ú_-2026_compressed.pdf <re.Match object; span=(96, 100), match='.pdf'>
+Error type: IndexError
+Error: list index out of range

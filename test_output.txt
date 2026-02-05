@@ -1,0 +1,49 @@
+﻿python : Traceback (most recent call last):
+At line:1 char:13
++ chcp 65001; python test_pdf.py 2>&1 | 
+Out-File -Encoding utf8 -FilePa ...
++             ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (T 
+   raceback (most recent call last)::String)   
+  [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandErr 
+   or
+ 
+  File "C:\Users\vpddk\Desktop\Me\Github\rest-a
+pi-and-scheduled-python-script\test_pdf.py", 
+line 83, in <module>
+    print(f'brl after 1\u03b7 split: OK')
+  File "C:\Users\vpddk\AppData\Local\Python\pyt
+honcore-3.12-64\Lib\encodings\cp1252.py", line 
+19, in encode
+    return codecs.charmap_encode(input,self.err
+ors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't 
+encode character '\u03b7' in position 11: 
+character maps to <undefined>
+Number of finalt sections: 5
+
+--- Processing section 0 ---
+Dates extracted: 1 (total: 1)
+
+--- Processing section 1 ---
+Dates extracted: 7 (total: 8)
+
+--- Processing section 2 ---
+Dates extracted: 7 (total: 15)
+
+--- Processing section 3 ---
+Dates extracted: 7 (total: 22)
+
+--- Processing section 4 ---
+Last section - breakfast extracted, length: 2236
+Dates extracted: 6 (total: 28)
+
+--- Final counts ---
+Total dates: 28
+Dates: ['1/2 /26', '2/2 /26', '3/2 /26', '4/2/26', '5/2/26']...
+
+--- Testing breakfast parsing ---
+Error parsing breakfast: 'charmap' codec can't encode character '\u03b7' in position 11: character maps to <undefined>
