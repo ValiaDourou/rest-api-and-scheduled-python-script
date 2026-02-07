@@ -34,8 +34,7 @@ def extract_from_pdf(program,filename):
  t=text.strip()
 
  t=t.split('ΠΡΟΣΦΕΡΟΜΕΝΟ')
- # Filter out ΝΗΣΤΙΣΙΜΕΣ ΕΠΙΛΟΓΕΣ (fasting options) sections - only keep ΒΕΛΤΙΩΜΕΝΟ ΕΔΕΣΜΑΤΟΛΟΓΙΟ sections
- finalt=[section for section in t[1:len(t)] if 'ΝΗΣΤΙΣΙΜΕΣ' not in section and 'ΒΕΛΤΙΩΜΕΝΟ' in section]
+ finalt=t[1:len(t)]
 
  lunch=[]
  dinner=[]
@@ -61,12 +60,12 @@ def extract_from_pdf(program,filename):
  sd=0
  cntd=0
 
- for i in finalt:
+ for i in t[1:]:
     week=i.split('ΔΕΙΠΝΟ')
     lunch=week[0]
     dinner=week[1]
 
-    if i==finalt[-1]:
+    if i==t[-1]:
         breakfast=re.split('ΠΡΩΙΝΟ|Πρωινό',dinner)[1]
         dinner=re.split('ΠΡΩΙΝΟ|Πρωινό',dinner)[0]
         
@@ -81,7 +80,7 @@ def extract_from_pdf(program,filename):
     dates=dates+datesl
 
     #Get the first dish
-    firstD=re.split('[Π]?ρώτο[\s]*[\n]*[\s]*Πιάτο|[Π]?ρώτο[\s]*[\n]*[\s]*πιάτο',lunch)[1]
+    firstD=re.split('Πρώτο[\s]*[\n]*[\s]*Πιάτο|Πρώτο[\s]*[\n]*[\s]*πιάτο',lunch)[1]
     firstD=re.split('Κυρίως',firstD)[0]
 
     #All the first dishes from the pdf are now in a list
@@ -296,7 +295,7 @@ def extract_from_pdf(program,filename):
 
     #Get dinner info
     #Get the first dish
-    DfirstD=re.split('[Π]?ρώτο[\s]*[\n]*[\s]*Πιάτο|[Π]?ρώτο[\s]*[\n]*[\s]*πιάτο',dinner)[1]
+    DfirstD=re.split('Πρώτο[\s]*[\n]*[\s]*Πιάτο|Πρώτο[\s]*[\n]*[\s]*πιάτο',dinner)[1]
     DfirstD=re.split('Κυρίως',DfirstD)[0]
 
     w=re.search('Σεφ',DfirstD)
@@ -717,20 +716,27 @@ def extract_from_pdf(program,filename):
  
  today = datetime.date.today()
 
+ def normalize_date_token(raw_date):
+    parts = re.findall(r'\d+', raw_date)
+    if len(parts) < 2:
+        logger.warning("Could not normalize date token '%s'", raw_date)
+        return raw_date.strip()
+
+    day = int(parts[0])
+    month = int(parts[1])
+    year = parts[2][-2:] if len(parts) > 2 else str(today.year)[-2:]
+    return f"{day}/{month}/{year}"
+
  n_dates=[]
  for d in dates:
-    year = str(today.year)[-2:]
-    p=re.split('[0-9]+\s*/\s*[0-9]+\s*/',d)
-    s=d.replace(p[1],year)
-    n_dates.append(s)
+    n_dates.append(normalize_date_token(d))
 
  #create json
  d = [ { 'day': x,'breakfast':l, 'lunch_first_dish': y, 'lunch_main_dish_1': z, 'lunch_main_dish_2':d,'lunch_side_dish':e,'lunch_dessert_1':'Φρούτο εποχής 2 επιλογές','lunch_dessert_2':f,'dinner_first_dish':g,'dinner_main_dish_1':h,'dinner_main_dish_2':i,'dinner_side_dish':j,'dinner_dessert_1':'Φρούτο εποχής 2 επιλογές','dinner_dessert_2':k } 
     for x,l, y, z,d,e,f,g,h,i,j,k in zip(n_dates,breakfast,firstDishes,mainDishes1,mainDishes2,sideDishes,lunchDesserts,DfirstDishes,DmainDishes1,DmainDishes2,DsideDishes,dinnerDesserts) ]
  filen = json.dumps(d, sort_keys=False, indent=4,ensure_ascii=False)
 
- month=re.split('/',dates[0])[1]
- month=re.split('/',month)[0]
+ month=n_dates[0].split('/')[1]
  month_name=calendar.month_name[int(month)]
  fn=re.split('-',filename)[1]
  fn=month_name+'_'+fn
@@ -765,67 +771,27 @@ def download_pdf():
 
  new_url = linklist[0]
  
- # Greek month name mapping
- greek_months = {
-     'ianouariou': 'January',
-     'fevrouariou': 'February', 
-     'martiou': 'March',
-     'apriliou': 'April',
-     'maios': 'May',
-     'maiou': 'May',
-     'iouniou': 'June',
-     'iouliou': 'July',
-     'avgoustou': 'August',
-     'septemvriou': 'September',
-     'oktovriou': 'October',
-     'noemvriou': 'November',
-     'dekemvriou': 'December'
- }
- 
  x=re.search('minos',new_url)
  if x is not None:
     name=re.split('minos-',new_url)[1]
+ elif 'maios' in new_url:
+    year=re.split('sitisis-[A-Za-z-]*',new_url)[1]
+    year=year.split('-')[0]
+    name = 'May' + '-' + year
+ elif 'oktovrios' in new_url:
+    year=re.split('sitisis-[A-Za-z-]*',new_url)[1]
+    year=year.split('-')[0]
+    name = 'October' + '-' + year
  else:
-    # Try to find Greek month name in URL
-    greek_month_found = None
-    for greek_name, english_name in greek_months.items():
-        if greek_name in new_url:
-            greek_month_found = (greek_name, english_name)
-            break
-    
-    if greek_month_found:
-        greek_name, english_name = greek_month_found
-        # Extract year from URL (usually at the end like "fevrouariou-2026/")
-        year_match = re.search(greek_name + r'-(\d{4})', new_url)
-        if year_match:
-            year = year_match.group(1)
-            name = english_name + '-' + year
-        else:
-            # Fallback: try to get year from end of URL
-            year_match = re.search(r'(\d{4})', new_url)
-            year = year_match.group(1) if year_match else '2026'
-            name = english_name + '-' + year
-    else:
-        # Try to match date range format like "programma-sitisis-1-23-12-2025"
-        date_range_match = re.search(r'sitisis-(\d+)-(\d+)-(\d+)-(\d+)', new_url)
-        if date_range_match:
-            # Format: sitisis-{start_day}-{end_day}-{month}-{year}
-            month_num = int(date_range_match.group(3))
-            year = date_range_match.group(4)
-            name = calendar.month_name[month_num] + '-' + year
-        else:
-            name=re.split('sitisis-[A-Za-z-]*',new_url)[1]
-            n=name.split('-')
+    name=re.split('sitisis-[A-Za-z-]*',new_url)[1]
+    n=name.split('-')
 
-            if len(n)==4:
-                name=calendar.month_name[int(n[2])]
-                name=name+'-'+n[3]
-            elif len(n) >= 3:
-                name=calendar.month_name[int(n[1])]
-                name=name+'-'+n[2]
-            else:
-                # Fallback for unexpected formats
-                name='Unknown-2026'
+    if len(n)==4:
+        name=calendar.month_name[int(n[2])]
+        name=name+'-'+n[3]
+    else:
+        name=calendar.month_name[int(n[1])]
+        name=name+'-'+n[2]
 
  name=re.split('/',name)[0]
 
