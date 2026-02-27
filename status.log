@@ -1259,3 +1259,16 @@
 2026-02-06 02:36:47,556 - __main__ - INFO - Successful run.
 2026-02-07 02:32:37,554 - __main__ - INFO - Token value: 1234
 2026-02-07 02:32:41,827 - __main__ - INFO - Successful run.
+2026-02-27 12:59:06,159 - __main__ - INFO - Token value: Token not available!
+2026-02-27 13:00:32,571 - __main__ - INFO - Token value: Token not available!
+2026-02-27 13:00:53,322 - __main__ - INFO - Token value: Token not available!
+2026-02-27 13:00:53,628 - __main__ - INFO - Found PDF link: https://www.upatras.gr/wp-content/uploads/2026/02/ΠΡΟΓΡΑΜΜΑ-ΣΙΤΙΣΗΣ_ΜΑΡΤΙΟΣ_-2026_ΝΗΣΤΙΣΙΜΟ_ΜΕΝΟΥ.pdf
+2026-02-27 13:00:53,830 - __main__ - INFO - Found PDF link: https://www.upatras.gr/wp-content/uploads/2026/02/ΠΡΟΓΡΑΜΜΑ-ΣΙΤΙΣΗΣ_ΜΑΡΤΙΟΣ_-2026_compressed.pdf
+2026-02-27 13:03:45,928 - __main__ - INFO - Token value: Token not available!
+2026-02-27 13:03:46,393 - __main__ - INFO - Found PDF link: https://www.upatras.gr/wp-content/uploads/2026/02/ΠΡΟΓΡΑΜΜΑ-ΣΙΤΙΣΗΣ_ΜΑΡΤΙΟΣ_-2026_ΝΗΣΤΙΣΙΜΟ_ΜΕΝΟΥ.pdf
+2026-02-27 13:03:46,677 - __main__ - INFO - Found PDF link: https://www.upatras.gr/wp-content/uploads/2026/02/ΠΡΟΓΡΑΜΜΑ-ΣΙΤΙΣΗΣ_ΜΑΡΤΙΟΣ_-2026_compressed.pdf
+2026-02-27 13:03:47,399 - __main__ - INFO - Successful run.
+2026-02-27 13:04:27,022 - __main__ - INFO - Token value: Token not available!
+2026-02-27 13:04:27,586 - __main__ - INFO - Found PDF link: https://www.upatras.gr/wp-content/uploads/2026/02/ΠΡΟΓΡΑΜΜΑ-ΣΙΤΙΣΗΣ_ΜΑΡΤΙΟΣ_-2026_ΝΗΣΤΙΣΙΜΟ_ΜΕΝΟΥ.pdf
+2026-02-27 13:04:27,711 - __main__ - INFO - Found PDF link: https://www.upatras.gr/wp-content/uploads/2026/02/ΠΡΟΓΡΑΜΜΑ-ΣΙΤΙΣΗΣ_ΜΑΡΤΙΟΣ_-2026_compressed.pdf
+2026-02-27 13:04:28,274 - __main__ - INFO - Successful run.

@@ -12,6 +12,81 @@ import datetime
 
 import requests
 
+MONTH_ALIASES = {
+    "ianouarios": 1,
+    "ianouariou": 1,
+    "january": 1,
+    "fevrouarios": 2,
+    "fevrouariou": 2,
+    "february": 2,
+    "martios": 3,
+    "martiou": 3,
+    "march": 3,
+    "aprilios": 4,
+    "apriliou": 4,
+    "april": 4,
+    "maios": 5,
+    "maiou": 5,
+    "may": 5,
+    "iounios": 6,
+    "iouniou": 6,
+    "june": 6,
+    "ioulios": 7,
+    "iouliou": 7,
+    "july": 7,
+    "avgoustos": 8,
+    "avgoustou": 8,
+    "august": 8,
+    "septemvrios": 9,
+    "septemvriou": 9,
+    "september": 9,
+    "oktovrios": 10,
+    "oktovriou": 10,
+    "october": 10,
+    "noemvrios": 11,
+    "noemvriou": 11,
+    "november": 11,
+    "dekemvrios": 12,
+    "dekemvriou": 12,
+    "december": 12,
+}
+
+
+def _derive_pdf_name_from_url(program_url):
+    match = re.search(r"programma-sitisis-([^/]+)/?$", program_url.lower())
+    if match is None:
+        raise ValueError(f"Could not parse program URL: {program_url}")
+
+    slug = match.group(1)
+    if slug.startswith("minos-"):
+        slug = slug[len("minos-"):]
+
+    tokens = [token for token in slug.split("-") if token]
+    year = next((token for token in reversed(tokens) if re.fullmatch(r"\d{4}", token)), None)
+    if year is None:
+        year = str(datetime.date.today().year)
+
+    month = next((MONTH_ALIASES[token] for token in tokens if token in MONTH_ALIASES), None)
+    if month is None:
+        for i in range(len(tokens) - 1, -1, -1):
+            token = tokens[i]
+            if token == year and i > 0 and re.fullmatch(r"\d{1,2}", tokens[i - 1]):
+                month_candidate = int(tokens[i - 1])
+                if 1 <= month_candidate <= 12:
+                    month = month_candidate
+                    break
+
+    if month is None:
+        numeric_tokens = [int(token) for token in tokens if re.fullmatch(r"\d{1,2}", token)]
+        valid_months = [value for value in numeric_tokens if 1 <= value <= 12]
+        if valid_months:
+            month = valid_months[-1]
+
+    if month is None:
+        raise ValueError(f"Could not derive month from program URL: {program_url}")
+
+    return f"{calendar.month_name[month]}-{year}"
+
 
 
 def extract_from_pdf(program,filename):
@@ -80,7 +155,7 @@ def extract_from_pdf(program,filename):
     dates=dates+datesl
 
     #Get the first dish
-    firstD=re.split('Πρώτο[\s]*[\n]*[\s]*Πιάτο|Πρώτο[\s]*[\n]*[\s]*πιάτο',lunch)[1]
+    firstD=re.split(r'(?:Πρώτο|ρώτο)[\s]*[\n]*[\s]*[Ππ]ιάτο',lunch)[1]
     firstD=re.split('Κυρίως',firstD)[0]
 
     #All the first dishes from the pdf are now in a list
@@ -208,7 +283,7 @@ def extract_from_pdf(program,filename):
 
     #All the side dishes from the pdf are now in a list
     x=re.search('Λάχανο',side)
-    y=re.search(',[\s]*Μαρούλι',side)
+    y=re.search(r',[\s]*Μαρούλι',side)
     w=re.search('Φλωρίνης',side)
 
     if x!='None':
@@ -234,17 +309,17 @@ def extract_from_pdf(program,filename):
     else:
         if 'Συνοδευτικά' in lunch:
             dessert=re.split('Συνοδευτικά',lunch)[1]
-            dessert=re.split('2[\s]*[\n]*επιλογές[\s]*',dessert,1)[1]
+            dessert=re.split(r'2[\s]*[\n]*επιλογές[\s]*',dessert,1)[1]
 
         else:
             dessert = re.split('επιλογές', lunch)[7]
     
     #All the desserts from the pdf are now in a list
-    x=re.search('-[\s]*Γλυκό',dessert)
+    x=re.search(r'-[\s]*Γλυκό',dessert)
 
     if x!='None':
-        dessert = re.sub("-[\s]*Γλυκό", "-γλυκό", dessert)
-    dessert=re.split('([\s]*[Α-ΔΖ-ΥΧ-Ω])',dessert)
+        dessert = re.sub(r"-[\s]*Γλυκό", "-γλυκό", dessert)
+    dessert=re.split(r'([\s]*[Α-ΔΖ-ΥΧ-Ω])',dessert)
     dessert=list(map(str, dessert[1:]))
 
     i=0
@@ -295,7 +370,7 @@ def extract_from_pdf(program,filename):
 
     #Get dinner info
     #Get the first dish
-    DfirstD=re.split('Πρώτο[\s]*[\n]*[\s]*Πιάτο|Πρώτο[\s]*[\n]*[\s]*πιάτο',dinner)[1]
+    DfirstD=re.split(r'(?:Πρώτο|ρώτο)[\s]*[\n]*[\s]*[Ππ]ιάτο',dinner)[1]
     DfirstD=re.split('Κυρίως',DfirstD)[0]
 
     w=re.search('Σεφ',DfirstD)
@@ -426,12 +501,12 @@ def extract_from_pdf(program,filename):
     r=re.search('κόκκινο, Μαρούλι',Dside)
     if r is not None:
         Dside=re.sub('κόκκινο, Μαρούλι','κόκκινο Μαρούλι',Dside)
-    y=re.search(',[\s]*Μαρούλι',Dside)
+    y=re.search(r',[\s]*Μαρούλι',Dside)
     w=re.search('Φλωρίνης',Dside)
     if x!='None':
         Dside = re.sub("Λάχανο", "λάχανο", Dside)
     if y!='None':
-        Dside = re.sub(',[\s]*Μαρούλι',',μαρούλι', Dside)
+        Dside = re.sub(r',[\s]*Μαρούλι',',μαρούλι', Dside)
     if w!='None':
         Dside = re.sub('Φλωρίνης','φλωρίνης', Dside)
 
@@ -450,21 +525,21 @@ def extract_from_pdf(program,filename):
         if 'Επιδόρπιο' in dinner or 'ΕΠΙΔΟΡΠΙ O' in dinner:
             Ddessert=re.split('Επιδόρπιο|ΕΠΙΔΟΡΠΙ O',dinner)[1]
         else:
-            Ddessert=re.split('2[\s]*[\n]*επιλογές[\s]*',dinner,1)[1]
+            Ddessert=re.split(r'2[\s]*[\n]*επιλογές[\s]*',dinner,1)[1]
     else:
         if 'Συνοδευτικά' in dinner:
             Ddessert=re.split('Συνοδευτικά',dinner)[1]
-            Ddessert=re.split('2[\s]*[\n]*επιλογές[\s]*',Ddessert,1)[1]
+            Ddessert=re.split(r'2[\s]*[\n]*επιλογές[\s]*',Ddessert,1)[1]
 
         else:
             Ddessert = re.split('επιλογές', dinner)[7]
     
     #All the desserts from the pdf are now in a list
-    x=re.search('-[\s]*Γλυκό',Ddessert)
+    x=re.search(r'-[\s]*Γλυκό',Ddessert)
 
     if x!='None':
-        Ddessert = re.sub("-[\s]*Γλυκό", "-γλυκό", Ddessert)
-    Ddessert=re.split('([\s]*[Α-ΔΖ-ΥΧ-Ω])',Ddessert)
+        Ddessert = re.sub(r"-[\s]*Γλυκό", "-γλυκό", Ddessert)
+    Ddessert=re.split(r'([\s]*[Α-ΔΖ-ΥΧ-Ω])',Ddessert)
     Ddessert=list(map(str, Ddessert[1:]))
 
     i=0
@@ -480,8 +555,8 @@ def extract_from_pdf(program,filename):
         Drd=(len(p)-len(p.rstrip())-1) / 2
     if len(Ddessertl)>0:
       Ddessertl[len(Ddessertl)-1]=Ddessertl[len(Ddessertl)-1].rstrip()
-    Ddessertl = [re.sub('[\t\n ]*\*Ειδικό πιάτο : Aφορά ειδικές διατροφικές ανάγκες και προσδιορίζεται κάθε φορά μετά από καταγραφή της σχετικής ανάγκης.[\t]*[\n]*', '',s) for s in Ddessertl]
-    Ddessertl = [re.sub('[\t\n ]*\*Ειδικό πιάτο : Aφορά ειδικές διατροφικές ανάγκες και προσδιορίζεται κάθε φορά μετά από καταγραφή της σχετικής ανάγκης[\t]*[\n]*', '',s) for s in Ddessertl]
+    Ddessertl = [re.sub(r'[\t\n ]*\*Ειδικό πιάτο : Aφορά ειδικές διατροφικές ανάγκες και προσδιορίζεται κάθε φορά μετά από καταγραφή της σχετικής ανάγκης.[\t]*[\n]*', '',s) for s in Ddessertl]
+    Ddessertl = [re.sub(r'[\t\n ]*\*Ειδικό πιάτο : Aφορά ειδικές διατροφικές ανάγκες και προσδιορίζεται κάθε φορά μετά από καταγραφή της σχετικής ανάγκης[\t]*[\n]*', '',s) for s in Ddessertl]
     
     if Ddessertl and '\n' not in Ddessertl[0]:
         Ddessertl[0] = '\n'+Ddessertl[0]
@@ -529,7 +604,7 @@ def extract_from_pdf(program,filename):
       y=len(a)-len(a.lstrip())
       lD.append(y) 
  
- dessertfL= [re.sub('[\s]*!', '',s) for s in dessertL]
+ dessertfL= [re.sub(r'[\s]*!', '',s) for s in dessertL]
  counter=0
  r=0
  z=0
@@ -617,7 +692,7 @@ def extract_from_pdf(program,filename):
         lunchDesserts.append('-')
 
  #Dinner desserts
- DdessertfL= [re.sub('[\s]*!', '',s) for s in DdessertL]
+ DdessertfL= [re.sub(r'[\s]*!', '',s) for s in DdessertL]
  counterD=0
  rD=0
  zD=0
@@ -702,7 +777,7 @@ def extract_from_pdf(program,filename):
         dinnerDesserts.append('-')
  
  #Get breakfast list
- brl=re.split('1η[\s]*[\n]*',breakfast)[1]
+ brl=re.split(r'1η[\s]*[\n]*',breakfast)[1]
  brl=re.split('[0-9]*[0-9]/[0-9]*[0-9]/[0-9][0-9]',brl)
  brl = [re.sub('\n', '',s) for s in brl]
  brl = [re.sub('[0-9]η', '',s) for s in brl]
@@ -770,30 +845,7 @@ def download_pdf():
         linklist.append(link)
 
  new_url = linklist[0]
- 
- x=re.search('minos',new_url)
- if x is not None:
-    name=re.split('minos-',new_url)[1]
- elif 'maios' in new_url:
-    year=re.split('sitisis-[A-Za-z-]*',new_url)[1]
-    year=year.split('-')[0]
-    name = 'May' + '-' + year
- elif 'oktovrios' in new_url:
-    year=re.split('sitisis-[A-Za-z-]*',new_url)[1]
-    year=year.split('-')[0]
-    name = 'October' + '-' + year
- else:
-    name=re.split('sitisis-[A-Za-z-]*',new_url)[1]
-    n=name.split('-')
-
-    if len(n)==4:
-        name=calendar.month_name[int(n[2])]
-        name=name+'-'+n[3]
-    else:
-        name=calendar.month_name[int(n[1])]
-        name=name+'-'+n[2]
-
- name=re.split('/',name)[0]
+ name = _derive_pdf_name_from_url(new_url)
 
  # Requests URL and get response object
  response = requests.get(new_url)
@@ -814,7 +866,7 @@ def download_pdf():
     c=re.search('.pdf',paragraphs[i])
     a=re.search('ΠΡΟΓΡΑΜΜΑ-ΣΙΤΙΣΗΣ',paragraphs[i])
     if c is not None and a is not None:
-        print(paragraphs[i],c)
+        logger.info("Found PDF link: %s", paragraphs[i])
 
         response = requests.get(el[i])
  
