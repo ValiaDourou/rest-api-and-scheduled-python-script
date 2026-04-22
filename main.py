@@ -9,8 +9,7 @@ import logging
 import logging.handlers
 import os
 import datetime
-
-import requests
+from urllib.parse import unquote, urljoin
 
 MONTH_ALIASES = {
     "ianouarios": 1,
@@ -86,6 +85,32 @@ def _derive_pdf_name_from_url(program_url):
         raise ValueError(f"Could not derive month from program URL: {program_url}")
 
     return f"{calendar.month_name[month]}-{year}"
+
+
+def _select_pdf_link(article_soup, article_url):
+    containers = article_soup.select(".entry-content")
+    anchor_source = containers[0].find_all("a", href=True) if containers else article_soup.find_all("a", href=True)
+
+    pdf_links = []
+    for anchor in anchor_source:
+        href = anchor.get("href")
+        if not href or ".pdf" not in href.lower():
+            continue
+
+        absolute_href = urljoin(article_url, href)
+        text = " ".join(anchor.get_text(" ", strip=True).split())
+        haystack = f"{unquote(absolute_href).lower()} {unquote(text).lower()}"
+        pdf_links.append((absolute_href, haystack))
+
+    if not pdf_links:
+        return None
+
+    fasting_token = "\u03bd\u03b7\u03c3\u03c4\u03b9\u03c3\u03b9\u03bc\u03bf"
+    preferred_links = [href for href, haystack in pdf_links if fasting_token not in haystack]
+    if preferred_links:
+        return preferred_links[0]
+
+    return pdf_links[0][0]
 
 
 
@@ -827,7 +852,8 @@ def download_pdf():
  url = "https://www.upatras.gr/category/news/welfare/"
 
  # Requests URL and get response object
- response = requests.get(url)
+ response = requests.get(url, timeout=30)
+ response.raise_for_status()
  
  # Parse text obtained
  soup = BeautifulSoup(response.text, 'html.parser')
@@ -840,39 +866,33 @@ def download_pdf():
   links.append(l)
  
  for link in links:
+    if not link:
+        continue
     r=re.search('programma-sitisis',link)
     if r is not None:
         linklist.append(link)
+
+ if not linklist:
+    raise FileNotFoundError(f"Could not find a meal-program article on listing page: {url}")
 
  new_url = linklist[0]
  name = _derive_pdf_name_from_url(new_url)
 
  # Requests URL and get response object
- response = requests.get(new_url)
+ response = requests.get(new_url, timeout=30)
+ response.raise_for_status()
  soup = BeautifulSoup(response.text, 'html.parser')
 
 
- l=soup.find_all("a")
- el=[]
- for e in l:
-  el.append(e.get('href'))
- paragraphs = []
- for x in el:
-    paragraphs.append(str(x))
+ pdf_url = _select_pdf_link(soup, new_url)
+ if pdf_url is None:
+    raise FileNotFoundError(f"Could not find a PDF link on article page: {new_url}")
+ logger.info("Downloading PDF: %s", pdf_url)
+ response = requests.get(pdf_url, timeout=60)
+ response.raise_for_status()
 
-
-
- for i in range(len(el)):
-    c=re.search('.pdf',paragraphs[i])
-    a=re.search('ΠΡΟΓΡΑΜΜΑ-ΣΙΤΙΣΗΣ',paragraphs[i])
-    if c is not None and a is not None:
-        logger.info("Found PDF link: %s", paragraphs[i])
-
-        response = requests.get(el[i])
- 
-        pdf = open(name+".pdf", 'wb')
-        pdf.write(response.content)
-        pdf.close()
+ with open(name+".pdf", 'wb') as pdf:
+    pdf.write(response.content)
  extract_from_pdf(name+".pdf",name)
 
 
