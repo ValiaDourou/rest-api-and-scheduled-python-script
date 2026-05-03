@@ -1402,3 +1402,6 @@
 2026-05-02 03:27:19,109 - __main__ - INFO - Token value: 1234
 2026-05-02 03:27:21,503 - __main__ - INFO - Downloading PDF: https://www.upatras.gr/wp-content/uploads/2026/04/ΠΡΟΓΡΑΜΜΑ_ΣΙΤΙΣΗΣ_ΜΑΪΟΣ_2026_compressed.pdf
 2026-05-02 03:27:23,194 - __main__ - INFO - Successful run.
+2026-05-03 03:47:11,498 - __main__ - INFO - Token value: 1234
+2026-05-03 03:47:14,036 - __main__ - INFO - Downloading PDF: https://www.upatras.gr/wp-content/uploads/2026/04/ΠΡΟΓΡΑΜΜΑ_ΣΙΤΙΣΗΣ_ΜΑΪΟΣ_2026_compressed.pdf
+2026-05-03 03:47:15,984 - __main__ - INFO - Successful run.
