@@ -1540,3 +1540,6 @@
 2026-07-16 02:58:03,297 - __main__ - INFO - Token value: 1234
 2026-07-16 02:58:05,786 - __main__ - INFO - Downloading PDF: https://www.upatras.gr/wp-content/uploads/2026/06/ΠΡΟΓΡΑΜΜΑ_ΣΙΤΙΣΗΣ_ΙΟΥΛΙΟΣ_2026.pdf
 2026-07-16 02:58:07,361 - __main__ - INFO - Successful run.
+2026-07-17 03:15:27,673 - __main__ - INFO - Token value: 1234
+2026-07-17 03:15:29,570 - __main__ - INFO - Downloading PDF: https://www.upatras.gr/wp-content/uploads/2026/06/ΠΡΟΓΡΑΜΜΑ_ΣΙΤΙΣΗΣ_ΙΟΥΛΙΟΣ_2026.pdf
+2026-07-17 03:15:31,213 - __main__ - INFO - Successful run.
